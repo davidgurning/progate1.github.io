@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Progate</title>
+  <style>
+    body {
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 20px;
+    }
+
+    #button {
+      margin-bottom: 20px;
+    }
+
+    .pokemon-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .pokemon-box {
+      width: 250px;
+      height: 250px;
+      margin: 10px;
+      padding: 10px;
+      text-align: center;
+      border-radius: 10px;
+      border: 7px solid gray;
+    }
+
+    .pokemon-box img {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Get Pokemon</h1>
+
+  <button type="button" id="button" onclick="fetchData()">Get</button>
+  <div id="pokemon-container" class="pokemon-container"></div>
+
+  <script>
+    function fetchData() {
+      const xhttp = new XMLHttpRequest();
+      const url = "https://pokeapi.co/api/v2/pokemon?limit=36";
+      const httpMethod = "GET";
+      xhttp.onload = function() {
+        const response = JSON.parse(this.responseText);
+        const results = response.results;
+
+        let pokemonData = '';
+        for (let i = 0; i < results.length; i++) {
+          const pokemonUrl = results[i].url;
+          const pokemonNumber = i + 1;
+
+          // Membuat permintaan untuk setiap Pokemon individual
+          const pokemonXhttp = new XMLHttpRequest();
+          pokemonXhttp.onload = function() {
+            const pokemonResponse = JSON.parse(this.responseText);
+            const pokemonName = pokemonResponse.name;
+            const pokemonType = pokemonResponse.types[0].type.name;
+            const pokemonImage = pokemonResponse.sprites.front_default;
+
+            // Menentukan warna latar belakang berdasarkan tipe Pokemon
+            let backgroundColor;
+            switch (pokemonType) {
+              case "grass":
+                backgroundColor = "lightgreen";
+                break;
+              case "fire":
+                backgroundColor = "orange";
+                break;
+              case "water":
+                backgroundColor = "lightblue";
+                break;
+              case "electric":
+                backgroundColor = "yellow";
+                break;
+              default:
+                backgroundColor = "gray";
+                break;
+            }
+
+            // Membuat kotak Pokemon dengan informasi yang diperoleh
+            const pokemonBox = `
+              <div class="pokemon-box" style="background-color: ${backgroundColor};">
+                <p>No. ${pokemonNumber}</p>
+                <img src="${pokemonImage}" alt="${pokemonName}">
+                <p>${pokemonName}</p>
+                <p>Type: ${pokemonType}</p>
+              </div>
+            `;
+            pokemonData += pokemonBox;
+
+            // Setelah informasi semua Pokemon diperoleh, tambahkan ke dalam container
+            if (pokemonNumber === results.length) {
+              const pokemonContainer = document.getElementById('pokemon-container');
+              pokemonContainer.innerHTML = pokemonData;
+            }
+          };
+          pokemonXhttp.open(httpMethod, pokemonUrl);
+          pokemonXhttp.send();
+        }
+      };
+      xhttp.open(httpMethod, url);
+      xhttp.send();
+    }
+  </script>
+</body>
+</html>
