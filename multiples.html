@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .error{
+            color: red;
+        }
+
+        .inputan {
+            margin-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid black;
+        }
+
+        #teks {
+            margin-top: 0;
+            float: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="inputan">
+        <p id="teks">Type a number:</p>
+        <input type="text" id="data">
+        <button class="button" onclick="checkNumber()">Click here!</button>
+    </div>
+
+    <script>
+        function checkNumber() {
+            const data = document.getElementById("data").value;
+            const hasil = document.getElementById("hasil");
+            const number = parseInt(data);
+
+            if (isNaN(number) || number === 0) {
+                hasil.textContent = "Invalid input!";
+                hasil.classList.add("error");
+            } else if (number % 3 === 0 && number % 5 === 0) {
+                hasil.textContent = "FizzBuzz";
+                hasil.classList.remove("error");
+            } else if (number % 3 === 0) {
+                hasil.textContent = "Fizz";
+                hasil.classList.remove("error");
+            } else if (number % 5 === 0) {
+                hasil.textContent = "Buzz";
+                hasil.classList.remove("error");
+            } else {
+                hasil.textContent = number.toString();
+                hasil.classList.remove("error");
+            }
+        }
+    </script>
+    <p id="hasil"></p>
+</body>
+</html>
